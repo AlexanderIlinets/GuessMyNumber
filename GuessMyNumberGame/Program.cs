@@ -14,16 +14,16 @@ namespace GuessMyNumberGame
 
             Functions myFunction = new Functions();
 
-            //Console.WriteLine("Please select a number from 1 to 10");
+            Console.WriteLine("Please select a number from 1 to 10");
 
-            //myFunction.Bisection(int.Parse(Console.ReadLine()));
+            myFunction.Bisection(int.Parse(Console.ReadLine()));
 
-            //Console.WriteLine("\nNow you play");
+            Console.WriteLine("\nNow you play");
 
-            //myFunction.HumanPlay();
+            myFunction.HumanPlay();
 
             Console.WriteLine("\nChoose a number from 1 to 100 and I'll guess it");
-            //Console.ReadLine();
+            Console.ReadLine();
             myFunction.CpuPlay();
 
 
