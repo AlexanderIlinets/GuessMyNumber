@@ -60,19 +60,26 @@ namespace GuessMyNumberGame
         {
             int bottom = 1;
             int top = 1000;
+            int tries = 0;
             Random randGen = new Random();
+
+            //# you will need to guess
             int cpuNum = randGen.Next(1, 1000);
 
             Console.WriteLine("I have chosen a number from 1 to 1000. Guess it");
 
+            //Number user guesses !!!!!!Need try-catch
             int userInput = int.Parse(Console.ReadLine());
-            int tries = 0;
+
+            //Loops till user guesses right
             do
-            {                
+            {
+                //Will short circuit if user guess right
                 if (userInput == cpuNum)
                 {
                     Console.WriteLine($"You got it, the number was {userInput}");
                 }
+                //Guides user by limiting number range
                 else if (userInput < cpuNum)
                 {
                     if (userInput <= bottom)
@@ -101,9 +108,12 @@ namespace GuessMyNumberGame
                         userInput = int.Parse(Console.ReadLine());
                     }                    
                 }
+
+                //Counts # of guesses
                 tries++;
             } while (userInput != cpuNum);
 
+            //Display results
             Console.WriteLine($"You got it, the number was {userInput}");
             Console.WriteLine($"Tries: {tries}");
             return userInput;
@@ -117,41 +127,81 @@ namespace GuessMyNumberGame
             int bottom = 1;
             int tries = 0;
 
-            do
+            //loops until cpu guesses right
+            while (hint != 3)
             {
-                if (tries > 8)
+                //Counts # of guesses
+                tries++;
+                
+                //Used to guess 1 or 100
+                if (cpuGuess == 2 && hint == 1)
                 {
-                    Console.WriteLine("Either you're messing with me or you changed your number");
+                    cpuGuess = 1;
                     hint = 3;
+                    break;
+                }
+                else if (cpuGuess == 99 && hint == 2)
+                {
+                    cpuGuess = 100;
+                    hint = 3;
+                    break;
+                }
+                
+                //Determins numbers cpu will guess
+                cpuGuess = bottom + ((top - bottom) / 2);
+
+                Console.WriteLine($"I'm guessing {cpuGuess}");
+                Console.WriteLine("Type 1 = Too high\n Type 2 = Too low\n Type 3 = Correct!");
+
+                //Try-Catch for user input
+                try
+                {
+                    hint = int.Parse(Console.ReadLine());
+
+                    if (hint < 1 || hint > 3)
+                    {
+                        throw new System.Exception("Please type 1, 2, or 3");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    do
+                    {
+                        Console.WriteLine("Please type 1, 2, or 3");
+                        hint = int.Parse(Console.ReadLine());
+                    } while (hint < 1 || hint > 3);
+                }
+
+                //Limit guess range
+                if (hint == 1)
+                {
+                    top = cpuGuess;
                 }
                 else
                 {
-                    cpuGuess = bottom + ((top - bottom) / 2);
-                    Console.WriteLine($"I'm guessing {cpuGuess}");
-                    Console.WriteLine("Type 1 = Too high\n Type 2 = Too low\n Type 3 = Correct!");
-                    hint = int.Parse(Console.ReadLine());
-                    if (cpuGuess == top - 1 && hint == 2)
-                    {
-                        cpuGuess = top;
-                        hint = 3;
-                    }
-                    else if (cpuGuess == bottom + 1 && hint == 1)
-                    {
-                        cpuGuess = bottom;
-                        hint = 3;
-                    }
-                    else if (hint == 1)
-                    {
-                        top = cpuGuess;
-                    }
-                    else
-                    {
-                        bottom = cpuGuess;
-                    }
+                    bottom = cpuGuess;
                 }
-                tries++;
-            } while (hint != 3);
-            Console.WriteLine($"The answer is {cpuGuess}");
+
+                //Will reduce iteration by 1 if critera is met
+                if (bottom == top - 2 && top != 100)
+                {
+                    cpuGuess = bottom + 1;
+                    hint = 3;
+                }
+                //Will stop loop due to cheating
+                else if (bottom == cpuGuess - 1 && hint == 1)
+                {
+                    Console.WriteLine("You cheated");
+                    hint = 4;
+                    break;
+                }
+            }
+
+            //Display results
+            if (hint == 3)
+            {
+                Console.WriteLine($"The answer is {cpuGuess}");
+            }
             Console.WriteLine($"Tries: {tries}");
             return cpuGuess;
         }
